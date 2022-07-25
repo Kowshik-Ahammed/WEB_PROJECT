@@ -1,9 +1,10 @@
 <?php
+session_start();
 require('connect.php');
 
 function dd($value)
 {
-    echo "<pre>" , print_r($value,true), "</pre>";
+    echo "<pre>" , print_r($value, true), "</pre>";
     die();
 }
 
@@ -31,15 +32,15 @@ function selectAll($table, $conditions = [])
     if (empty($conditions)) {
 
         $stmt= $conn->prepare($sql);
-    $stmt->execute();
-    $records= $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-    return $records;
+       $stmt->execute();
+       $records= $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        return $records;
 
     } else {
 
      $i = 0;
      foreach ($conditions as $key => $value) {
-        if ($i=== 0)
+        if ($i===0)
         {
             $sql = $sql . " WHERE $key=?";
         }
@@ -67,7 +68,7 @@ function selectone($table, $conditions)
 
      $i = 0;
      foreach ($conditions as $key => $value) {
-        if ($i=== 0)
+        if ($i===0)
         {
             $sql = $sql . " WHERE $key=?";
         }
@@ -78,8 +79,8 @@ function selectone($table, $conditions)
      }
      
      $sql = $sql . " LIMIT 1";
-     $stmt= executeQuery($sql, $conditions);
-     $records= $stmt->get_result()->fetch_assoc();
+     $stmt = executeQuery($sql, $conditions);
+     $records = $stmt->get_result()->fetch_assoc();
      return $records;
 
     
@@ -159,14 +160,47 @@ function delete($table, $id)
 
 
 
+function getPublishedPosts()
+{
+    global $conn;
+    $sql = "SELECT p.*, u.username FROM posts AS p JOIN users AS u ON p.user_id=u.id where p.published=?";
 
-/*$data = [
+    $stmt= executeQuery($sql, ['published' => 1]);
+     $records= $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+     return $records;
 
-    'admin' => 1,
-    'username' => ' Kowshik ahammed',
-    'email' => 'ahammed@gmail.com',
-    'password' => '1234'
-   
-];*/
+}
+
+
+function getPostsByTopicId($topic_id)
+{
+    global $conn;
+    $sql = "SELECT p.*, u.username FROM posts AS p JOIN users AS u ON p.user_id=u.id where p.published=? AND topic_id=?";
+
+    $stmt= executeQuery($sql, ['published' => 1, 'topic_id' => $topic_id]);
+     $records= $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+     return $records;
+
+}
+
+
+
+
+
+
+
+
+function searchPosts($term)
+{
+    $match = '%' . $term . '%';
+    global $conn;
+    $sql = "SELECT p.*, u.username FROM posts AS p JOIN users AS u ON p.user_id=u.id where p.published=? AND p.title LIKE ? OR p.body LIKE ?";
+
+    $stmt= executeQuery($sql, ['published' => 1, 'title' => $match, 'body' => $match]);
+     $records= $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+     return $records;
+
+}
+
 
 

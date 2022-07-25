@@ -1,6 +1,9 @@
 <?php include("path.php") ?>
 
-<?php include(ROOT_PATH . "/app/controllers/users.php"); ?>
+<?php include(ROOT_PATH . "/app/controllers/users.php"); 
+
+guestsOnly();
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -34,25 +37,25 @@
 
     <div>
         <label>Username</label>
-        <input type="text" name="username" value="<?php echo $username; ?>" class="text-input">
+        <input type="text" name="username" value="<?php echo $username; ?>" class="text-input" required>
     </div>
 
 
     <div>
         <label>Email</label>
-        <input type="email" name="email" value="<?php echo $email; ?>" class="text-input">
+        <input type="email" name="email" value="<?php echo $email; ?>" class="text-input" required>
     </div>
 
 
     <div>
         <label>Password</label>
-        <input type="password" name="password" value="<?php echo $password; ?>" class="text-input">
+        <input type="password" name="password" value="<?php echo $password; ?>" class="text-input" required>
     </div>
 
 
     <div>
         <label>Password Confirmation</label>
-        <input type="password" name="passwordConf" value="<?php echo $passwordConf; ?>" class="text-input">
+        <input type="password" name="passwordConf" value="<?php echo $passwordConf; ?>" class="text-input" required>
     </div>
 
     <div>

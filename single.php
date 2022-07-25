@@ -1,4 +1,17 @@
 <?php include("path.php") ?>
+<?php include(ROOT_PATH . '/app/controllers/posts.php'); 
+
+if (isset($_GET['id'])) {
+
+    $post = selectone('posts', ['id' => $_GET['id']]);
+   
+}
+$topics = selectAll('topics');
+$posts = selectAll('posts', ['published' => 1]);
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,7 +24,7 @@
         <link rel="stylesheet" href="assets/css/style.css">
         <!-- google font-->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Candal|Lora">
-    <title>Single Post</title>
+    <title><?php echo $post['title']; ?> | Jashore Association of KUET</title>
 </head>
 <body>
 
@@ -39,16 +52,10 @@
     <!--MAIN CONTENT WRAPPER-->
     <div class="main-content-wrapper">
      <div class="main-content single">
-   <h1 class="post-title">This is the title of the Post</h1>
+   <h1 class="post-title"><?php echo $post['title']; ?></h1>
 
    <div class="post-content">
-    <p>Jessore District (Bengali: যশোর, pronounced Jaw-shore, Anglicised: Jessore), officially spelled Jashore District from April 2018,[2][3][4] is a district in the southwestern region of Bangladesh. It is bordered by India to the west, Khulna District and Satkhira District to the south, Khulna and Narail to the east, and Jhenaidah District and Magura District to the north. Jessore is the capital of the district.</p>
-    <p>Jessore district was established in 1781. It consists of 8 municipalities, 8 upazilas, 92 unions, 1329 mouzas, 1477 villages and 120 mahallas. The upazilas are: Abhaynagar Upazila, Bagherpara Upazila, Chaugachha Upazila, Jessore Sadar Upazila, Jhikargachha Upazila, Keshabpur Upazila, Manirampur Upazila, and Sharsha Upazila.</p>
-    <p>Jessore district once belonged to the ancient Janapada of Vanga (বঙ্গ) Janapada. In the 15th century, Jessore was a part of the kingdom of Pratapaditya. It was then conquered by the Mughals.</p>
-    <p>Annual average temperature range from 15.4 to 34.6 °C (59.7 to 94.3 °F). The annual rainfall is 1,537 millimetres (60.5 in).</p>
-  <p>Jessore District encompasses 2606.98 km2. It is bounded by Jhenaidaha and Magura districts at the north, Satkhira and Khulna districts at the south, Narail and Khulna districts at the east, and North 24 Parganas and Nadia districts of West Bengal of India at the west. Major rivers that flow through this region are the Bhairab, Teka, Hari, Sree, Aparbhadra, Harihar, Buribhadra, Chitra, Betna, Kopotakkho, and the Mukteshwari.[7</p>
-   <p>Bhairab River has two main branches, the Khulna-Ichamati and the Kobadak. The Khulna-Ichamati forms a boundary between Bangladesh and India. The towns of Khulna and Jessore are situated on the bank of the river.[2] The development of their settlements and culture were influenced by the river. The Rupsa River is formed from the Bhairab and the Atai River, and flows into the Pasur River.[4]</p>   
-   <p>Jessore district once belonged to the ancient Janapada of Vanga (বঙ্গ) Janapada. In the 15th century, Jessore was a part of the kingdom of Pratapaditya. It was then conquered by the Mughals.</p>
+    <?php echo html_entity_decode($post['body']); ?>
 
      </div>
 
@@ -73,31 +80,17 @@
          <div class="section popular">
             <h2 class="section-title">Popular</h2>
 
-            <div class="post clearfix">
-                <img src="assets/IMAGES/images/pic-9.jpeg" alt="">
-                <a href="" class="title"><h4>Helping a kuetian</h4></a>
+            <?php foreach ($posts as $p): ?>
+
+                <div class="post clearfix">
+                <img src="<?php echo BASE_URL . '/assets/images/' . $p['image']; ?>" alt="">
+                <a href="" class="title">
+                <h4><?php echo $p['title'] ?></h4></a>
             </div>
+               
+          <?php endforeach; ?>
 
-            <div class="post clearfix">
-                <img src="assets/IMAGES/images/pic-4.jpeg" alt="">
-                <a href="" class="title"><h4 style="text-align:center">On campus recruirment for the jashore student through JAK</h4></a>
-            </div>
-
-
-
-            <div class="post clearfix">
-                <img src="assets/IMAGES/images/pic-5.jpeg" alt="">
-                <a href="" class="title"><h4>Farewell for 2k15 batch</h4></a>
-            </div>
-
-
-
-            <div class="post clearfix">
-                <img src="assets/IMAGES/images/pic-7.jpeg" alt="">
-                <a href="" class="title"><h4>Iftar mahfil arranged by the 2k19 batch</h4></a>
-            </div>
-
-
+            
 
 
          </div>
@@ -105,10 +98,12 @@
 <div class="section topics">
     <h2 class="section-title">Topics</h2>
 <ul>
-    <li><a href="#">Trending Posts</a></li>
-    <li><a href="#">Recent Posts</a></li>
-    <li><a href="#">Blood Donation</a></li>
-    <li><a href="#">Help for Kuetian</a></li>
+    <?php foreach ($topics as $topic): ?>
+
+        <li><a href="<?php echo BASE_URL . '/index.php?t_id=' . $topic['id'] . '&name=' . $topic['name'] ?>"><?php echo $topic['name']; ?></a></li>
+    <?php endforeach; ?>  
+    
+    
 </ul>
 </div>
 

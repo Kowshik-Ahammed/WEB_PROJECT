@@ -1,5 +1,52 @@
 
-<?php include("path.php") ?>
+<?php
+
+include("path.php");
+
+ include(ROOT_PATH . "/app/controllers/topics.php"); 
+
+ $posts = array();
+ $postsTitle = 'Recent Posts';
+
+
+ if (isset($_GET['t_id'])) {
+
+    $posts =  getPostsByTopicId($_GET['t_id']);
+    $postsTitle ="You searched for posts under '" . $_GET['name'] . "'";
+ }
+
+ 
+ 
+else if (isset($_POST['search-term'])) {
+    $postsTitle ="You searched for '" . $_POST['search-term'] . "'";
+    $posts = searchPosts($_POST['search-term']);
+}
+else {
+
+    $posts = getPublishedPosts();
+
+}
+
+
+
+
+
+
+//echo print_r($_SESSION);
+if(isset($_SESSION['curr'])){
+    $_SESSION['recent'] = time();
+    // echo print_r($_SESSION);
+    
+if(($_SESSION['recent'] - $_SESSION['curr'] > 10)){
+    session_destroy();
+    header("Location:index.php");
+}
+}
+
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,6 +66,9 @@
 
 <!--INCLUDE HEADER-->
 <?php include (ROOT_PATH . "/app/includes/header.php"); ?>
+<?php include (ROOT_PATH . "/app/includes/messages.php"); ?>
+
+
 
 
     <!--Page wrapper-->
@@ -33,101 +83,23 @@
    
    <div class="post-wrapper">
 
+   <?php foreach ($posts as $post): ?>
     <div class="post">
-      <img src="assets/IMAGES/images/pic-1.jpeg" alt="" class="slider-image">
+      <img src="<?php echo BASE_URL . '/assets/images/' . $post['image']; ?>" alt="" class="slider-image">
       <div class="post-info">
-         <h4><a href="single.html">Logo of Jashore Association of KUET</a></h4>
-         <i class="far fa-user"><p style="color:gray">Kowshik</p></i>
+         <h4><a href="single.php?id=<?php echo $post['id']; ?>"><?php echo $post['title']; ?></a></h4>
+         <i class="far fa-user"><p style="color:gray"><?php echo $post['username']; ?></p></i>
          &nbsp;
-         <i class="far fa-calender"><p style="color:gray">Jun 28,2022</p></i>
+         <i class="far fa-calender"><p style="color:gray"><?php echo date('F j, Y', strtotime($post['created_at'])); ?></p></i>
       </div>  
     </div>
+
+    <?php endforeach; ?>
+
     
     
-    <div class="post">
-        <img src="assets/IMAGES/images/pic-2.jpeg" alt="" class="slider-image">
-        <div class="post-info">
-           <h4><a href="single.html">Stall-1 for admission to help the jashorian</a></h4>
-           <i class="far fa-user"><p style="color:gray">Kowshik</p></i>
-           &nbsp;
-           <i class="far fa-calender"><p style="color:gray">Jun 28,2022</p></i>
-        </div>  
-      </div>
     
-      
-      <div class="post">
-        <img src="assets/IMAGES/images/pic-3.jpeg" alt="" class="slider-image">
-        <div class="post-info">
-           <h4><a href="single.html">Stall-2 for admission to help the jashorian</a></h4>
-           <i class="far fa-user"><p style="color:gray">Kowshik</p></i>
-           &nbsp;
-           <i class="far fa-calender"><p style="color:gray">Jun 24,2022 </p></i>>
-        </div>  
-      </div>
-
-
-      <div class="post">
-        <img src="assets/IMAGES/images/pic-4.jpeg" alt="" class="slider-image">
-        <div class="post-info">
-           <h4><a href="single.html">On campus recruirment for the jashore student through JAK</a></h4>
-           <i class="far fa-user"><p style="color:gray">Kowshik</p></i>
-           &nbsp;
-           <i class="far fa-calender"><p style="color:gray">Jun 28,2022</p></i>
-        </div>  
-      </div>
-
-
-      <div class="post">
-        <img src="assets/IMAGES/images/pic-9.jpeg" alt="" class="slider-image">
-        <div class="post-info">
-           <h4><a href="single.html">Help for kuetian through Jashore Association of KUET</a></h4>
-           <i class="far fa-user"><p style="color:gray">Kowshik</p></i>
-           &nbsp;
-           <i class="far fa-calender"><p style="color:gray">Jun 21,2022</p></i>
-        </div>  
-      </div>
-
-
-      <div class="post">
-        <img src="assets/IMAGES/images/pic-5.jpeg" alt="" class="slider-image">
-        <div class="post-info">
-           <h4><a href="single.html">Farewell of 2k15 batch</a></h4>
-           <i class="far fa-user"><p style="color:gray">Kowshik</p></i>
-           &nbsp;
-           <i class="far fa-calender"><p style="color:gray">Jun 13,2022</p></i>
-        </div>  
-      </div>
-
-
-      <div class="post">
-        <img src="assets/IMAGES/images/pic-8.jpeg" alt="" class="slider-image">
-        <div class="post-info">
-           <h4><a href="single.html">Farewell of 2k15 batch</a></h4>
-           <i class="far fa-user"><p style="color:gray">Kowshik</p></i>
-           &nbsp;
-           <i class="far fa-calender"><p style="color:gray">July 07,2022</p></i>
-        </div>  
-      </div>
-
-      <div class="post">
-        <img src="assets/IMAGES/images/pic-6.jpeg" alt="" class="slider-image">
-        <div class="post-info">
-           <h4><a href="single.html">Iftar mahfil arranged by 2k19</a></h4>
-           <i class="far fa-user"><p style="color:gray">Kowshik</p></i>
-           &nbsp;
-           <i class="far fa-calender"><p style="color:gray">Jun 25,2022</p></i>
-        </div>  
-      </div>
-
-      <div class="post">
-        <img src="assets/IMAGES/images/pic-7.jpeg" alt="" class="slider-image">
-        <div class="post-info">
-           <h4><a href="single.html">iftar mahfil arranged by 2k19</a></h4>
-           <i class="far fa-user"><p style="color:gray">Kowshik</p></i>
-           &nbsp;
-           <i class="far fa-calender"><p style="color:gray">Jun 24,2022</p></i>
-        </div>  
-      </div>
+    
 
        </div>
 
@@ -138,101 +110,33 @@
 
     <!--MAIN CONTENT-->
      <div class="main-content">
-        <h1 class ="recent-post-title">Recent Posts</h1>
+        <h1 class ="recent-post-title"><?php echo $postsTitle ?></h1>
+
+
+        <?php foreach ($posts as $post): ?>
+
+            <div class ="post clearfix">
+            <img src="<?php echo BASE_URL . '/assets/images/' . $post['image']; ?>" alt="" class="post-image">
+            <div class="post-preview">
+                <h2> <a href="single.php?id=<?php echo $post['id']; ?>"><?php echo $post['title']; ?></a></h2>
+                <i class="far fa-user"><p style="color:gray"><?php echo $post['username']; ?></p></i>
+                &nbsp;
+                <i class="far fa-calender"><p style="color:gray"><?php echo date('F j, Y', strtotime($post['created_at'])); ?></p></i>
+                <p class="preview-text">
+                    <?php echo html_entity_decode(substr($post['body'], 0, 150) . '...'); ?>
+                    </p>
+                <a href="single.php?id=<?php echo $post['id']; ?>" class="btn read-more">Read More......</a>
+           
+            </div>
+        </div>
+            
+         <?php endforeach; ?>   
         
 
-        <div class ="post clearfix">
-            <img src="assets/IMAGES/images/pic-10.jpeg" alt="" class="post-image">
-            <div class="post-preview">
-                <h2> <a href="single.html">New committee for JAK 2022</a></h2>
-                <i class="far fa-user"><p style="color:gray">Kowshik</p></i>
-                &nbsp;
-                <i class="far fa-calender"><p style="color:gray">Jun 24,2022</p></i>
-                <p class="preview-text" style="color:black">
-                    Hoping everyone is doing well in this pandemic.
-                    Jashore Association of KUET (JAK) is a special part 
-                    I am very much thankful to have this as my association 🖤
-                    </p>
-                <a href="single.html" class="btn read-more">Read More......</a>
-           
-            </div>
-        </div>
+        
 
 
-         
-        <div class ="post clearfix">
-            <img src="assets/IMAGES/images/pic-8.jpeg" alt="" class="post-image">
-            <div class="post-preview">
-                <h2> <a href="single.html">Farewell of 2k15 batch</a></h2>
-                <i class="far fa-user"><p style="color:gray">Kowshik</p></i>
-                &nbsp;
-                <i class="far fa-calender"><p style="color:gray">Jun 24,2022</p></i>
-                <p class="preview-text" style="color:black">
-                    Hoping everyone is doing well in this pandemic.
-                    Jashore Association of KUET (JAK) is a special part 
-                    I am very much thankful to have this as my association 🖤
-                    </p>
-                <a href="single.html" class="btn read-more">Read More......</a>
-           
-            </div>
-        </div>
-
-
-        <div class ="post clearfix">
-            <img src="assets/IMAGES/images/pic-5.jpeg" alt="" class="post-image">
-            <div class="post-preview">
-                <h2> <a href="single.html">Farewell of 2k15 batch</a></h2>
-                <i class="far fa-user"><p style="color:gray">Kowshik</p></i>
-                &nbsp;
-                <i class="far fa-calender"><p style="color:gray">Jun 24,2022</p></i>
-                <p class="preview-text" style="color:black">
-                    Hoping everyone is doing well in this pandemic.
-                    Jashore Association of KUET (JAK) is a special part 
-                    I am very much thankful to have this as my association 🖤
-                    </p>
-                <a href="single.html" class="btn read-more">Read More......</a>
-           
-            </div>
-        </div>
-
-        <div class ="post clearfix">
-            <img src="assets/IMAGES/images/pic-6.jpeg" alt="" class="post-image">
-            <div class="post-preview">
-                <h2> <a href="single.html">Iftar mahfil arranged by 2k19</a></h2>
-                <i class="far fa-user"><p style="color:gray">Kowshik</p></i>
-                &nbsp;
-                <i class="far fa-calender"><p style="color:gray">Jun 24,2022</p></i>
-                <p class="preview-text" style="color:black">
-                    Hoping everyone is doing well in this pandemic.
-                    Jashore Association of KUET (JAK) is a special part 
-                    I am very much thankful to have this as my association 🖤
-                    </p>
-                <a href="single.html" class="btn read-more">Read More......</a>
-           
-            </div>
-        </div>
-
-         
-        <div class ="post clearfix">
-            <img src="assets/IMAGES/images/pic-7.jpeg" alt="" class="post-image">
-            <div class="post-preview">
-                <h2> <a href="single.html">Iftar mahfil arranged by 2k19</a></h2>
-                <i class="far fa-user"><p style="color:gray">Kowshik</p></i>
-                &nbsp;
-                <i class="far fa-calender"><p style="color:gray">Jun 24,2022</p></i>
-                <p class="preview-text" style="color:black">
-                    Hoping everyone is doing well in this pandemic.
-                    Jashore Association of KUET (JAK) is a special part 
-                    I am very much thankful to have this as my association 🖤
-                    </p>
-                <a href="single.html" class="btn read-more">Read More......</a>
-           
-            </div>
-        </div>
-
-
-
-
+        
 
     </div>
 
@@ -243,7 +147,7 @@
 
 <div class ="section search">
     <h2 class="section-title">Search</h2>
-<form action="index.html" method="post">
+<form action="index.php" method="post">
     <input type="text" name="search-term" class="text-input" placeholder="search...">
 
 </form>
@@ -252,10 +156,14 @@
 <div class="section topics">
     <h2 class="section-title">Topics</h2>
 <ul>
-    <li><a href="#">Trending Posts</a></li>
-    <li><a href="#">Recent Posts</a></li>
-    <li><a href="#">Blood Donation</a></li>
-    <li><a href="#">Help for Kuetian</a></li>
+<?php foreach ($topics as $key => $topic): ?>
+    
+    <li><a href="<?php echo BASE_URL . '/index.php?t_id=' . $topic['id'] . '&name=' . $topic['name'] ?>"><?php echo $topic['name']; ?></a></li>
+<?php endforeach; ?>
+
+    
+
+
 </ul>
 </div>
 
