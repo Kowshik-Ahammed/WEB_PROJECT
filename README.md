@@ -5,4 +5,4 @@ senior juniors and many more for their intimacy. This project was built through 
 1. Login as admin
 2. Login as user
 3. Update post
-4. Collaborate with the akumni
+4. Collaborate with the alumni
