@@ -6,3 +6,5 @@ senior juniors and many more for their intimacy. This project was built through 
 2. Login as user
 3. Update post
 4. Collaborate with the alumni
+## Flow Diagram
+
