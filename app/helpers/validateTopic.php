@@ -1,0 +1,24 @@
+<?php
+
+function validateTopic($topic)
+{
+   
+    $errors = array();
+
+    
+    if (empty($topic['name'])) {
+        array_push ($errors, 'Name is required');
+    }
+
+    
+
+    $existingTopic = selectone('topics', ['name' => $topic['name']] );
+    if ($existingTopic) {
+
+        array_push ($errors, 'Name already exists');
+    }
+    return $errors;
+}
+
+
+
